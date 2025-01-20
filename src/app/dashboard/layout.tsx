@@ -15,6 +15,7 @@ import {
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUser, MenuIcon } from "lucide-react";
+import Link from "next/link";
 import React, { ReactNode } from "react";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
@@ -68,6 +69,9 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={`/`}>Visit Site</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <LogoutLink>Logout</LogoutLink>
             </DropdownMenuItem>
