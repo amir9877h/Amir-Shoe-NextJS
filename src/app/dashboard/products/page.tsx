@@ -22,11 +22,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { prisma } from "@/lib/prisma";
 import { MoreHorizontal, PlusCircle, UserIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const ProductsPage = () => {
+async function getData() {
+  const data = await prisma.product.findMany({
+    orderBy: {
+      craetedAt: "desc",
+    },
+  });
+
+  return data;
+}
+
+const ProductsPage = async () => {
+  const data = await getData();
   return (
     <>
       <div className="flex items-center justify-end">
@@ -57,30 +70,53 @@ const ProductsPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>
-                  <UserIcon className="h-16 w-16" />
-                </TableCell>
-                <TableCell>Nike Air</TableCell>
-                <TableCell>Active</TableCell>
-                <TableCell>$299.00</TableCell>
-                <TableCell>15/06/2025</TableCell>
-                <TableCell className="text-end">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size={`icon`} variant={`ghost`}>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
+              {data.map((item) => {
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      {/* <UserIcon className="h-16 w-16" /> */}
+                      <Image
+                        src={item.images[0]}
+                        alt="product image"
+                        width={64}
+                        height={64}
+                        className="rounded-md object-cover h-16 w-16"
+                      />
+                    </TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.status}</TableCell>
+                    <TableCell>${item.price}</TableCell>
+                    <TableCell>
+                      {new Intl.DateTimeFormat("en-US").format(item.craetedAt)}
+                    </TableCell>
+                    <TableCell className="text-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size={`icon`} variant={`ghost`}>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link href={`/dashboard/products/${item.id}`}>
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/dashboard/products/${item.id}/delete`}
+                            >
+                              Delete
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>
