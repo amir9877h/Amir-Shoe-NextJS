@@ -24,7 +24,7 @@ import { ChevronLeft, XIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { categories } from "@/lib/categories";
-import SubmitButton from "@/components/SubmitButton";
+import { SubmitButton } from "@/components/SubmitButton";
 
 import { createProduct, editProduct } from "@/app/actions";
 
@@ -225,9 +225,7 @@ const EditForm = ({ data, isEditMode }: iAppProps) => {
           </div>
         </CardContent>
         <CardFooter>
-          <SubmitButton>
-            {isEditMode ? "Edit Product" : "Create Product"}
-          </SubmitButton>
+          <SubmitButton text={isEditMode ? "Edit Product" : "Create Product"} />
         </CardFooter>
       </Card>
     </form>

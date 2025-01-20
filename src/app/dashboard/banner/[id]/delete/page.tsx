@@ -1,4 +1,4 @@
-import { deleteProduct } from "@/app/actions";
+import { deleteBanner } from "@/app/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,32 +9,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import React from "react";
 
-const DeleteProductPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
+export default function DeleteBannerRoute({
+  params,
+}: {
+  params: { id: string };
+}) {
   return (
     <div className="h-[80vh] w-full flex items-center justify-center">
       <Card className="max-w-xl">
         <CardHeader>
-          <CardTitle>Are You absolutely sure?</CardTitle>
+          <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete this
-            product and remove all data from our servers.
+            banner and remove all data from our servers.
           </CardDescription>
         </CardHeader>
         <CardFooter className="w-full flex justify-between">
-          <Button variant={`secondary`} asChild>
-            <Link href={`/dashboard/products`}>Cancel</Link>
+          <Button variant="secondary" asChild>
+            <Link href="/dashboard/banner">Cancel</Link>
           </Button>
-          <form action={deleteProduct}>
-            <input type="hidden" name="productId" value={id} />
-            <SubmitButton variant={`destructive`} text="Delete" />
+          <form action={deleteBanner}>
+            <input type="hidden" name="bannerId" value={params.id} />
+            <SubmitButton variant="destructive" text="Delete Banner" />
           </form>
         </CardFooter>
       </Card>
     </div>
   );
-};
-
-export default DeleteProductPage;
+}
