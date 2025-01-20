@@ -1,6 +1,6 @@
-## Guardian News NextJS Web App
+## AmirShoe NextJS Web App
 
-[ONLINE LINK](https://guardian-news-next-js.vercel.app/)
+[ONLINE LINK](https://amir-shoe-next-js.vercel.app/)
 
 ## Preview
 

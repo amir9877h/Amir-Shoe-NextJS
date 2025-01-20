@@ -1,3 +1,4 @@
+import CustomToast from "@/components/CustomToast";
 import DashboardNavigation from "@/components/Dashboard/DashboardNavigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,15 +15,23 @@ import {
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUser, MenuIcon } from "lucide-react";
-import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  if (!user || user.email !== "amir.cph4@gmail.com") {
-    return redirect("/");
+  // user.email !== "amir.cph4@gmail.com"
+  if (!user) {
+    return (
+      <CustomToast
+        title="Unauthorized"
+        description="Please Login First"
+        duration={3000}
+        redirectTo={`/api/auth/login?`}
+        variant="destructive"
+      />
+    );
   }
   return (
     <div className="flex w-full flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,7 +74,7 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      {/* {children} */}
+      <main className="my-5">{children}</main>
     </div>
   );
 };
