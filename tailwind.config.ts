@@ -59,7 +59,13 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  corePlugins: {
+    aspectRatio: false,
+  },
+  plugins: [
+    require("@tailwindcss/aspect-ratio"),
+    require("tailwindcss-animate"),
+  ],
 } satisfies Config;
 
 export default withUt(config);
