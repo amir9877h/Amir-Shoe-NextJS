@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { ShoppingBagIcon } from "lucide-react";
+import { MenuIcon, ShoppingBagIcon } from "lucide-react";
 import { UserDropdown } from "./UserDropdown";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +8,7 @@ import {
   RegisterLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { NavbarLinks } from "./NavbarLinks";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 export async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -21,12 +22,14 @@ export async function Navbar() {
             Amir<span className="text-primary">Shoe</span>
           </h1>
         </Link>
-        <NavbarLinks />
+        <div className="hidden md:flex justify-center items-center gap-x-2 ml-8">
+          <NavbarLinks />
+        </div>
       </div>
 
       <div className="flex items-center">
         {user ? (
-          <>
+          <div className="hidden md:flex">
             <Link href="/bag" className="group p-2 flex items-center mr-2">
               <ShoppingBagIcon className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
               <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
@@ -35,13 +38,14 @@ export async function Navbar() {
             </Link>
 
             <UserDropdown
+              align="end"
               email={user.email as string}
               name={user.given_name as string}
               userImage={
                 user.picture ?? `https://avatar.vercel.sh/${user.given_name}`
               }
             />
-          </>
+          </div>
         ) : (
           <div className="hidden md:flex md:flex-1 md:items-center md:justify-end md:space-x-2">
             <Button variant="ghost" asChild>
@@ -53,6 +57,58 @@ export async function Navbar() {
             </Button>
           </div>
         )}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              className="shrink-0 md:hidden"
+              variant={`outline`}
+              size={`icon`}
+            >
+              <MenuIcon className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={`left`}>
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            {user ? (
+              <div className="flex items-center">
+                <Link
+                  href="/bag"
+                  className="group p-2 flex items-center mr-2 order-2"
+                >
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                  <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                    5
+                  </span>
+                </Link>
+
+                <div className="order-1">
+                  <UserDropdown
+                    align="start"
+                    email={user.email as string}
+                    name={user.given_name as string}
+                    userImage={
+                      user.picture ??
+                      `https://avatar.vercel.sh/${user.given_name}`
+                    }
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="">
+                <Button variant="ghost" asChild>
+                  <LoginLink>Sign in</LoginLink>
+                </Button>
+                <span className="h-6 w-px bg-gray-200"></span>
+                <Button variant="ghost" asChild>
+                  <RegisterLink>Create Account</RegisterLink>
+                </Button>
+              </div>
+            )}
+            <div className="grid gap-6 text-lg font-medium mt-5">
+              <NavbarLinks />
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
