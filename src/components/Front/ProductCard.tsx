@@ -22,7 +22,7 @@ interface iAppProps {
 
 export function ProductCard({ item }: iAppProps) {
   return (
-    <div className="rounded-lg">
+    <div className="rounded-lg flex flex-col h-full">
       <Carousel className="w-full mx-auto">
         <CarouselContent>
           {item.images.map((item, index) => (
@@ -48,13 +48,15 @@ export function ProductCard({ item }: iAppProps) {
           ${item.price}
         </h3>
       </div>
-      <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+      <p className="text-gray-600 text-sm mt-2 line-clamp-2 min-h-10">
         {item.description}
       </p>
 
-      <Button asChild className="w-full mt-5">
-        <Link href={`/product/${item.id}`}>View Details!</Link>
-      </Button>
+      <div className="h-full flex items-end bg-transparent bg-opacity-0">
+        <Button asChild className="w-full mt-5">
+          <Link href={`/product/${item.id}`}>View Details!</Link>
+        </Button>
+      </div>
     </div>
   );
 }

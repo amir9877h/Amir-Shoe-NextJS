@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { ShoppingBagButton } from "@/components/SubmitButton";
 import { FeaturedProducts } from "@/components/Front/FeaturedProducts";
 import { ImageSlider } from "@/components/Front/ImageSlider";
+import { addItem } from "@/app/actions";
 
 async function getData(productId: string) {
   const data = await prisma.product.findUnique({
@@ -34,6 +35,7 @@ export default async function ProductIdRoute({
 }) {
   noStore();
   const data = await getData(params.id);
+  const addProductToShoppingCart = addItem.bind(null, data.id);
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start lg:gap-x-24 py-6">
@@ -52,7 +54,7 @@ export default async function ProductIdRoute({
           </div>
           <p className="text-base text-gray-700 mt-6">{data.description}</p>
 
-          <form action={``}>
+          <form action={addProductToShoppingCart}>
             <ShoppingBagButton />
           </form>
         </div>
