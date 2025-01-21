@@ -8,7 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   getKindeServerSession,
   LogoutLink,
@@ -43,6 +49,9 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
             </Button>
           </SheetTrigger>
           <SheetContent side={`left`}>
+            <SheetHeader>
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            </SheetHeader>
             <nav className="grid gap-6 text-lg font-medium mt-5">
               <DashboardNavigation />
             </nav>

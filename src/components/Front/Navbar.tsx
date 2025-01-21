@@ -8,7 +8,13 @@ import {
   RegisterLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { NavbarLinks } from "./NavbarLinks";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 export async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -68,7 +74,9 @@ export async function Navbar() {
             </Button>
           </SheetTrigger>
           <SheetContent side={`left`}>
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <SheetHeader>
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            </SheetHeader>
             {user ? (
               <div className="flex items-center">
                 <Link
