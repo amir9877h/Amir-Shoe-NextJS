@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   Card,
   CardContent,
@@ -29,6 +30,7 @@ import Link from "next/link";
 import React from "react";
 
 async function getData() {
+  noStore();
   const data = await prisma.banner.findMany({
     orderBy: {
       craetedAt: "desc",

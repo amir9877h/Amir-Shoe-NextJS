@@ -1,4 +1,7 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Chart from "@/components/Dashboard/Chart";
+import DashboardStats from "@/components/Dashboard/DashboardStats";
+import RecentSales from "@/components/Dashboard/RecentSales";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   Card,
   CardContent,
@@ -6,126 +9,57 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DollarSign, PartyPopper, ShoppingBag, User2 } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+
 import React from "react";
 
-const Dashboard = () => {
+async function getData() {
+  const now = new Date();
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(now.getDate() - 7);
+
+  const data = await prisma.product.findMany({
+    where: {
+      craetedAt: {
+        gte: sevenDaysAgo,
+      },
+    },
+    select: {
+      price: true,
+      craetedAt: true,
+    },
+    orderBy: {
+      craetedAt: "asc",
+    },
+  });
+
+  const result = data.map((item) => ({
+    date: new Intl.DateTimeFormat("en-US").format(item.craetedAt),
+    revenue: item.price / 100,
+  }));
+
+  return result;
+}
+
+const Dashboard = async () => {
+  noStore();
+  const data = await getData();
   return (
     <>
-      <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 md:gap-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-yellow-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">$100.000</p>
-            <p className="text-xs text-muted-foreground">
-              Based on 100 Charges
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Total Sales</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">+50</p>
-            <p className="text-xs text-muted-foreground">
-              Total Sales on AmirShoe
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Total Products</CardTitle>
-            <PartyPopper className="h-4 w-4 text-indigo-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">37</p>
-            <p className="text-xs text-muted-foreground">
-              Total Products Created
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle>Total Users</CardTitle>
-            <User2 className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">120</p>
-            <p className="text-xs text-muted-foreground">
-              Total Users Signed Up
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <DashboardStats />
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 mt-10">
         <Card className="xl:col-span-2">
           <CardHeader>
-            <CardTitle>Transactions</CardTitle>
+            <CardTitle>Products Added</CardTitle>
             <CardDescription>
-              Recent transactions from your store
+              Recent Products from your store in last 7 days
             </CardDescription>
           </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-8">
-            <div className="flex items-center gap-4">
-              <Avatar className="hidden sm:flex h-9 w-9">
-                <AvatarFallback>AM</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <p className="text-sm font-medium">AmirHossein</p>
-                <p className="text-sm text-muted-foreground">
-                  amir.cph4@gmail.com
-                </p>
-              </div>
-              <p className="ml-auto font-medium">+$1,999.00</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Avatar className="hidden sm:flex h-9 w-9">
-                <AvatarFallback>AM</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <p className="text-sm font-medium">AmirHossein</p>
-                <p className="text-sm text-muted-foreground">
-                  amir.cph4@gmail.com
-                </p>
-              </div>
-              <p className="ml-auto font-medium">+$1,999.00</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Avatar className="hidden sm:flex h-9 w-9">
-                <AvatarFallback>AM</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <p className="text-sm font-medium">AmirHossein</p>
-                <p className="text-sm text-muted-foreground">
-                  amir.cph4@gmail.com
-                </p>
-              </div>
-              <p className="ml-auto font-medium">+$1,999.00</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Avatar className="hidden sm:flex h-9 w-9">
-                <AvatarFallback>AM</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <p className="text-sm font-medium">AmirHossein</p>
-                <p className="text-sm text-muted-foreground">
-                  amir.cph4@gmail.com
-                </p>
-              </div>
-              <p className="ml-auto font-medium">+$1,999.00</p>
-            </div>
+          <CardContent>
+            <Chart data={data} />
           </CardContent>
         </Card>
+        <RecentSales />
       </div>
     </>
   );

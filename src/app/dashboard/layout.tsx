@@ -1,5 +1,6 @@
 import DashboardNavigation from "@/components/Dashboard/DashboardNavigation";
 import { Button } from "@/components/ui/button";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,7 @@ import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
+  noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
